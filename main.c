@@ -43,7 +43,7 @@ int main(int argc, char**argv) {
         ramSize = atoi(argv[2]);
         num1 = atoi(argv[3]);
         num2 = atoi(argv[4]);
-        instructions = generateInstructionsMultiply(num1, num2, ramSize, 0, 1);
+        instructions = generateInstructionsExpo(num1, num2, ramSize, 0, 1);
     }
     
     else {

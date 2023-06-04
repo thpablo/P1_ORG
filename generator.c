@@ -65,27 +65,36 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
 
     // 3 Instrucoes alem das somas (mover (2x) e finalizar maquina)
     int quantAloca = 3 + num2;
+
+    //Se for Exponencial
     if(isExpo){
-        quantAloca = quantAloca - 3;
-        quantAloca = num2 * num2;
-        quantAloca += 3;
+
+/*         São num1 * (num2 - 1) Instrucoes de soma
+                        +
+           (num2) Instrucoes de anular valores
+           em um endereço (Mover valor 0 ao endereço).
+           Para realizar a exponenciação.        
+*/
+        quantAloca = (num1 * (num2 - 1)) + num2;
+
+        quantAloca += 3;    //2 Primeiras instrucoes de mover valores para memoria RAM
+                            // E finalizar máquina
     }
 
-    //MUDAR QUANTIDADE MALLOC
-    Instruction* instructions = (Instruction*) malloc( 100  * sizeof(Instruction));
+    Instruction* instructions = (Instruction*) malloc( (quantAloca  + 0)  * sizeof(Instruction));
     
     int randomAddress_Num1 = rand() % ramSize;  //Num1
     int randomAddress_Num2;                     //Num2
-    int randomAddress_Num3;                     //Res
+    int randomAddress_Res;                      //Res
 
-    do { 
+    do { //Sempre endereços diferentes
         randomAddress_Num2 = rand() % ramSize;
-    } while (randomAddress_Num2 == randomAddress_Num1); //Sempre endereços diferentes
+    } while (randomAddress_Num2 == randomAddress_Num1); 
 
-    do {
-        randomAddress_Num3 = rand() % ramSize;
-    } while (randomAddress_Num3 == randomAddress_Num2 || randomAddress_Num3 == randomAddress_Num1); //Endereços diferentes.
-
+    do {    //Endereços diferentes.
+        randomAddress_Res = rand() % ramSize;
+    } while (randomAddress_Res == randomAddress_Num2 || randomAddress_Res == randomAddress_Num1); 
+    
 
     // Levar informações para a memória.
     instructions[n].opcode  = 0;
@@ -97,25 +106,23 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
     instructions[n + 1].info2   = randomAddress_Num2; //Endereço para valor 2;
 
 
-
     int i = n + 2;  //Soma-se 2 por causa das instrucoes de mover
 
     num2 += 2;      //Soma-se 2 por causa das instrucoes de mover
-    int numExpo = 1;
+    int numExpo = 2;
     int somaNum2 = num1;
     //Expo
     if(isExpo){
-        //int numExpo = num2;
         numExpo = num2 - 2;
         num2 = num1 + 2; //Soma-se 2 por causa das instrucoes de mover
-        //int somaNum2 = num1;
     }
+
     //Realizando somas
-    while(i < num2 && (isExpo && numExpo > 1)) { //Somas enquanto menor que o numero 2;
+    while(i < num2 && numExpo > 1) { //Somas enquanto menor que o numero 2;
         instructions[i].opcode  = 1;
         instructions[i].info1   = randomAddress_Num1; //Somar endereço valor num1
-        instructions[i].info2   = randomAddress_Num3; //Endereço valor num1
-        instructions[i].info3   = randomAddress_Num3; //Endereço valor resultado
+        instructions[i].info2   = randomAddress_Res; //Endereço valor num1
+        instructions[i].info3   = randomAddress_Res; //Endereço valor resultado
         i++;
 
         if(isExpo && i == num2){
@@ -125,7 +132,7 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
             i++;
             instructions[i].opcode = 1;
             instructions[i].info1 = randomAddress_Num1;
-            instructions[i].info2 = randomAddress_Num3;
+            instructions[i].info2 = randomAddress_Res;
             instructions[i].info3 = randomAddress_Num1;
             i++;
             num2 += (somaNum2 + 1);
@@ -198,7 +205,12 @@ Instruction* generateInstructionsFibonacci(int termos, int ramSize, int n){
    instructions[quantTermos - 1].info2 = -1;
    instructions[quantTermos - 1].info3 = -1;
 
+
    return instructions;
+}
 
+Instruction* generateInstructionsExpo(int valor1, int valor2, int ramSize, int n, int isExponencial){
+    Instruction * instructions = generateInstructionsMultiply( valor1, valor2, ramSize, n, isExponencial );
 
+    return instructions;
 }
