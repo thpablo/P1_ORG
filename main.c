@@ -26,12 +26,11 @@ int main(int argc, char**argv) {
         instructions = generateRandomInstructions(ramSize);
     } else if (strcmp(argv[1], "file") == 0) {
         instructions = readInstructions(argv[2], &ramSize);
-    } else if (strcmp(argv[1], "mult") == 0){   //mult ramSize num1 num2
+    } else if (strcmp(argv[1], "multi") == 0){   //mult ramSize num1 num2
         ramSize = atoi(argv[2]);
         num1    = atoi(argv[3]);
         num2    = atoi(argv[4]);
-
-        instructions = generateInstructionsMultiply(num1, num2, ramSize, 0);
+        instructions = generateInstructionsMultiply(num1, num2, ramSize, 0, 0);
     } else if (strcmp(argv[1], "fibo") == 0){
         ramSize = atoi(argv[2]);
         num1    = atoi(argv[3]);
@@ -40,6 +39,11 @@ int main(int argc, char**argv) {
         for(int i = 0; i < 10; i++){
             printf("%d %d %d %d\n", instructions[i].opcode, instructions[i].info1, instructions[i].info2, instructions[i].info3);
         }
+    } else if (strcmp(argv[1], "expo") == 0){
+        ramSize = atoi(argv[2]);
+        num1 = atoi(argv[3]);
+        num2 = atoi(argv[4]);
+        instructions = generateInstructionsMultiply(num1, num2, ramSize, 0, 1);
     }
     
     else {

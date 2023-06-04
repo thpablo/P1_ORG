@@ -7,7 +7,8 @@ void start(Machine* machine, Instruction* instructions, int RAMSize) {
     machine->RAM.items = (float*) malloc(sizeof(float) * RAMSize);
     machine->RAM.size = RAMSize;
     for (int i=0;i<RAMSize;i++)
-        machine->RAM.items[i] = (float)rand() / RAND_MAX;
+        //machine->RAM.items[i] = (float)rand() / RAND_MAX;
+        machine->RAM.items[i] = 0;
 }
 
 void stop(Machine* machine) {

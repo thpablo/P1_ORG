@@ -57,18 +57,26 @@ Instruction* readInstructions(char* fileName, int* ramSize) {
     return instructions;
 }       
 //                                                                             n -> numero de instrucoes.
-Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n){
+Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n, int isExpo){
     /*1: Instrucao -> Levar valor 1 para memória ram */
     /*2: Instrucao -> Levar valor 2 para memória ram */
     /*3: Instrucao -> Multiplicaçao:  Somas num2 vezes */
     /*4: Finalizar máquina */
 
     // 3 Instrucoes alem das somas (mover (2x) e finalizar maquina)
-    Instruction* instructions = (Instruction*) malloc((3 + num2)  * sizeof(Instruction));
+    int quantAloca = 3 + num2;
+    if(isExpo){
+        quantAloca = quantAloca - 3;
+        quantAloca = num2 * num2;
+        quantAloca += 3;
+    }
+
+    //MUDAR QUANTIDADE MALLOC
+    Instruction* instructions = (Instruction*) malloc( 100  * sizeof(Instruction));
     
     int randomAddress_Num1 = rand() % ramSize;  //Num1
     int randomAddress_Num2;                     //Num2
-    int randomAddress_Num3;                     //Num3
+    int randomAddress_Num3;                     //Res
 
     do { 
         randomAddress_Num2 = rand() % ramSize;
@@ -88,22 +96,52 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
     instructions[n + 1].info1   = num2; //Valor 2
     instructions[n + 1].info2   = randomAddress_Num2; //Endereço para valor 2;
 
+
+
+    int i = n + 2;  //Soma-se 2 por causa das instrucoes de mover
+
+    num2 += 2;      //Soma-se 2 por causa das instrucoes de mover
+    int numExpo = 1;
+    int somaNum2 = num1;
+    //Expo
+    if(isExpo){
+        //int numExpo = num2;
+        numExpo = num2 - 2;
+        num2 = num1 + 2; //Soma-se 2 por causa das instrucoes de mover
+        //int somaNum2 = num1;
+    }
     //Realizando somas
-    for (int i = n + 2; i < num2 + 2; i++) { //Somas enquanto menor que o numero 2;
+    while(i < num2 && (isExpo && numExpo > 1)) { //Somas enquanto menor que o numero 2;
         instructions[i].opcode  = 1;
         instructions[i].info1   = randomAddress_Num1; //Somar endereço valor num1
         instructions[i].info2   = randomAddress_Num3; //Endereço valor num1
         instructions[i].info3   = randomAddress_Num3; //Endereço valor resultado
+        i++;
+
+        if(isExpo && i == num2){
+            instructions[i].opcode = 0;
+            instructions[i].info1 = 0;
+            instructions[i].info2 = randomAddress_Num1;
+            i++;
+            instructions[i].opcode = 1;
+            instructions[i].info1 = randomAddress_Num1;
+            instructions[i].info2 = randomAddress_Num3;
+            instructions[i].info3 = randomAddress_Num1;
+            i++;
+            num2 += (somaNum2 + 1);
+            numExpo--;
+        }
     }
 
-
-    instructions[2 + num2].opcode =-1;    //Ultima posicao
-    instructions[2 + num2].info1 = -1;
-    instructions[2 + num2].info2 = -1;
-    instructions[2 + num2].info3 = -1;
+    instructions[i].opcode =-1;    //Ultima posicao
+    instructions[i].info1 = -1;
+    instructions[i].info2 = -1;
+    instructions[i].info3 = -1;
 
     return instructions;
 }
+
+
 
 Instruction* generateInstructionsFibonacci(int termos, int ramSize, int n){
     /*1: Instrucao -> Levar valor num1 para memória ram */
