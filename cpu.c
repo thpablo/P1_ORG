@@ -7,8 +7,7 @@ void start(Machine* machine, Instruction* instructions, int RAMSize) {
     machine->RAM.items = (float*) malloc(sizeof(float) * RAMSize);
     machine->RAM.size = RAMSize;
     for (int i=0;i<RAMSize;i++)
-        //machine->RAM.items[i] = (float)rand() / RAND_MAX;
-        machine->RAM.items[i] = 0;
+        machine->RAM.items[i] = (float)rand() / RAND_MAX;
 }
 
 void stop(Machine* machine) {
@@ -32,7 +31,9 @@ void run(Machine* machine) {
         opcode = instruction.opcode;
         switch (opcode) {
             case -1:
+                printf("\033[0;31m");
                 printf("  > Finalizando a execucao.\n");
+                printf("\033[0m");
                 break;
             case 0: // Levando informação para a RAM
                 value = (float) instruction.info1;

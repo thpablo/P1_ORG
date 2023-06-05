@@ -63,8 +63,8 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
     /*3: Instrucao -> Multiplicaçao:  Somas num2 vezes */
     /*4: Finalizar máquina */
 
-    // 3 Instrucoes alem das somas (mover (2x) e finalizar maquina)
-    int quantAloca = 3 + num2;
+    // 4 Instrucoes alem das somas (mover (3x) e finalizar maquina)
+    int quantAloca = 4 + num2;
 
     //Se for Exponencial
     if(isExpo){
@@ -77,11 +77,11 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
 */
         quantAloca = (num1 * (num2 - 1)) + num2;
 
-        quantAloca += 3;    //2 Primeiras instrucoes de mover valores para memoria RAM
+        quantAloca += 4;    // 3 Primeiras instrucoes de mover valores para memoria RAM
                             // E finalizar máquina
     }
 
-    Instruction* instructions = (Instruction*) malloc( (quantAloca  + 0)  * sizeof(Instruction));
+    Instruction* instructions = (Instruction*) malloc( 100 * sizeof(Instruction));
     
     int randomAddress_Num1 = rand() % ramSize;  //Num1
     int randomAddress_Num2;                     //Num2
@@ -97,13 +97,30 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
     
 
     // Levar informações para a memória.
+
+    //Levar Valor 1
     instructions[n].opcode  = 0;
     instructions[n].info1   = num1;     //Valor 1
     instructions[n].info2   = randomAddress_Num1; //Endereço para valor 1
 
+    //Levar Valor 2
     instructions[n + 1].opcode  = 0;
     instructions[n + 1].info1   = num2; //Valor 2
     instructions[n + 1].info2   = randomAddress_Num2; //Endereço para valor 2;
+    
+    //Levar Valores de resposta para Exponencial
+    instructions[n + 2].opcode  = 0;
+
+    //Se expoente for 0
+    if (isExpo && (num2 == 0))      { instructions[n + 2].info1   = 1; }  
+
+    //Se expoente for 1  
+    else if (isExpo && (num2 == 1)) { instructions[n + 2].info1   = num1; }
+
+    //Se expoente for diferente de 0 e 1
+    else                            { instructions[n + 2].info1   = 0; }
+
+    instructions[n + 2].info2   = randomAddress_Res; //Endereço para valor 2
 
 
     int i = n + 2;  //Soma-se 2 por causa das instrucoes de mover
@@ -113,8 +130,9 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
     int somaNum2 = num1;
     //Expo
     if(isExpo){
+        i++;    //Soma-se um por causa da instrucao de anular valor no expoente
         numExpo = num2 - 2;
-        num2 = num1 + 2; //Soma-se 2 por causa das instrucoes de mover
+        num2 = num1 + 3; //Soma-se 3 por causa das instrucoes de mover
     }
 
     //Realizando somas
@@ -139,6 +157,7 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
             numExpo--;
         }
     }
+
 
     instructions[i].opcode =-1;    //Ultima posicao
     instructions[i].info1 = -1;

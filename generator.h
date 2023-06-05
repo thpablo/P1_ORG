@@ -8,6 +8,6 @@ Instruction* generateInstructionsMultiply(int , int , int , int, int);
 Instruction* generateInstructionsFibonacci(int , int , int);
 Instruction* readInstructions(char*, int*);
 Instruction* generateInstructionsExpo(int, int, int, int, int);
-
+void printInstructions(Instruction*);
 
 #endif // !GENERATOR_H
