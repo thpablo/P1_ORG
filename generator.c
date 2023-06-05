@@ -143,17 +143,29 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
         instructions[i].info3   = randomAddress_Res; //Endereço valor resultado
         i++;
 
+        /*  Verifica se é uma exponenciação
+            e se realizou a quantidade somas
+            para uma multiplicação (Num1 * Num2)
+        */
         if(isExpo && i == num2){
+
+            //Anula valor no endereço do numero 1
             instructions[i].opcode = 0;
             instructions[i].info1 = 0;
             instructions[i].info2 = randomAddress_Num1;
             i++;
+
+            //Leva valor do resultado da multiplicao para o numero 1
             instructions[i].opcode = 1;
             instructions[i].info1 = randomAddress_Num1;
             instructions[i].info2 = randomAddress_Res;
             instructions[i].info3 = randomAddress_Num1;
             i++;
+
+            //Aumenta o limite da multiplicação para somas futuras
             num2 += (somaNum2 + 1);
+
+            //Reduz a quantidade de multiplicacoes restantes da Exponenciacao
             numExpo--;
         }
     }
