@@ -77,11 +77,14 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
 */
         quantAloca = (num1 * (num2 - 1)) + num2;
 
+        if(num2 == 0)       // Se expoente for nulo 
+            quantAloca = 0;
+
         quantAloca += 4;    // 3 Primeiras instrucoes de mover valores para memoria RAM
-                            // E finalizar máquina
+                            // + pra finalizar máquina
     }
 
-    Instruction* instructions = (Instruction*) malloc( 100 * sizeof(Instruction));
+    Instruction* instructions = (Instruction*) malloc( quantAloca * sizeof(Instruction));
     
     int randomAddress_Num1 = rand() % ramSize;  //Num1
     int randomAddress_Num2;                     //Num2
@@ -130,7 +133,7 @@ Instruction* generateInstructionsMultiply(int num1, int num2, int ramSize, int n
     int somaNum2 = num1;
     //Expo
     if(isExpo){
-        i++;    //Soma-se um por causa da instrucao de anular valor no expoente
+        i++;        //Soma-se um por causa da instrucao de anular valor no expoente
         numExpo = num2 - 2;
         num2 = num1 + 3; //Soma-se 3 por causa das instrucoes de mover
     }
